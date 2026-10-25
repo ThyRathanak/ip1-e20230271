@@ -15,14 +15,14 @@ Commit: 5883d5a
 
 ## AI use this period
 
-- Project scope and user stories
-- Initial wireframe and UI planning
-- Initial Vue implementation (if used)
+- Used ChatGPT to plan the project scope, define the User and Support Agent roles, and draft eight user stories with acceptance criteria.
+- Used ChatGPT to plan the initial wireframes for the login, user dashboard, create-ticket, and agent dashboard screens.
+- Used ChatGPT for guidance on the initial Vue 3 + TypeScript implementation and project structure (if applicable).
 
 ## One decision I made and why
 
-[Explain one real design decision.]
+I decided to separate the User and Support Agent roles because they have different responsibilities. Users can create tickets and track their own problems, while support agents can manage tickets, update their status, and reply to users. This separation makes the application easier to understand and supports role-based permissions in later development.
 
 ## What I would show if asked to explain one thing
 
-[Explain how the ticket list or one Vue component works.]
+I would explain the ticket list component. It displays multiple tickets using sample data and Vue's v-for directive. Each ticket shows its title, status, and priority. Using a component for the ticket list makes the interface easier to maintain and allows it to be connected to backend data in a later milestone.
