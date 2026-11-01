@@ -4,6 +4,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import ClientDashboard from "../views/ClientDashboard.vue";
 import StaffTicketQueue from "../views/StaffTicketQueue.vue";
 import TicketDetails from "../views/TicketDetails.vue";
+import CreateTicket from "../views/CreateTicket.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -11,10 +12,10 @@ const router = createRouter({
   routes: [
     {
       path: "/",
-      redirect: "/client",
+      redirect: "/client/dashboard",
     },
     {
-      path: "/client",
+      path: "/client/dashboard",
       name: "client-dashboard",
       component: ClientDashboard,
     },
@@ -28,7 +29,13 @@ const router = createRouter({
       name: "ticket-details",
       component: TicketDetails,
     },
+    {
+      path: "/tickets/new",
+      name: "CreateTicket",
+      component: CreateTicket,
+    }
   ],
+  
 });
 
 export default router;

@@ -4,12 +4,12 @@ import { RouterLink, RouterView } from "vue-router";
 </script>
 
 <template>
-  <header>
+  <!-- <header>
     <nav>
       <RouterLink to="/client">Client Dashboard</RouterLink>
       <RouterLink to="/staff/tickets">Staff Queue</RouterLink>
     </nav>
-  </header>
+  </header> -->
 
   <RouterView />
 </template>
