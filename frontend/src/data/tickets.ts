@@ -1,0 +1,59 @@
+
+import type { Ticket, User } from "../types";
+
+export const users: User[] = [
+  {
+    id: 1,
+    name: "Dara Sok",
+    email: "dara@example.com",
+    role: "client",
+  },
+  {
+    id: 2,
+    name: "Sophea Chan",
+    email: "sophea@example.com",
+    role: "staff",
+  },
+  {
+    id: 3,
+    name: "Admin User",
+    email: "admin@example.com",
+    role: "admin",
+  },
+];
+
+export const tickets: Ticket[] = [
+  {
+    id: 101,
+    title: "Cannot connect to campus Wi-Fi",
+    description: "My laptop cannot connect to the campus network.",
+    category: "Network",
+    priority: "high",
+    status: "open",
+    clientId: 1,
+    assignedStaffId: 2,
+    createdAt: "2026-11-01",
+  },
+  {
+    id: 102,
+    title: "Request software installation",
+    description: "I need help installing required software.",
+    category: "Software",
+    priority: "medium",
+    status: "in_progress",
+    clientId: 1,
+    assignedStaffId: 2,
+    createdAt: "2026-11-01",
+  },
+  {
+    id: 103,
+    title: "Projector is not working",
+    description: "The classroom projector does not display an image.",
+    category: "Hardware",
+    priority: "low",
+    status: "resolved",
+    clientId: 1,
+    assignedStaffId: null,
+    createdAt: "2026-10-30",
+  },
+];
