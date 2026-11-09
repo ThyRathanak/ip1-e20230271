@@ -2,113 +2,105 @@
 
 ## 1. Project Overview
 
-The Helpdesk Ticket Management System is a web application that helps users report technical problems and allows support agents to manage and resolve them. Users can create tickets, track their progress, and communicate with support agents. Agents can view, search, filter, and update tickets.
+The Helpdesk Ticket Management System is a web application that allows clients to report technical problems and enables support staff to manage and resolve them. Clients can create tickets, track their progress, and communicate with staff. Admins oversee tickets and assign them to staff members.
 
 ## 2. User Roles
 
-### User
-
+### Client
 - Create support tickets.
-- View their own tickets.
-- Check ticket status.
-- Read replies and provide additional information.
+- View and track their own tickets.
+- Reply to support staff.
 
-### Support Agent
-
-- View submitted tickets.
+### Staff
+- View assigned tickets.
 - Search and filter tickets.
-- Assign tickets to agents.
 - Update ticket status and priority.
-- Reply to users and resolve tickets.
+- Reply to clients and resolve tickets.
+
+### Admin
+- View all submitted tickets.
+- Assign tickets to staff.
+- Manage client and staff accounts.
 
 ## 3. User Stories and Acceptance Criteria
 
 ### US-01: Create a Ticket
+As a client, I want to submit a support ticket so that I can report a problem.
 
-As a user, I want to submit a support ticket so that I can report a problem.
-
-Acceptance criteria:
-
-- The user can enter a title and description.
-- The title and description are required.
-- A successful submission creates a ticket with a default status of Open.
+- Enter a ticket title and description.
+- Both fields are required.
+- New tickets have a default status of Open.
 
 ### US-02: View My Tickets
+As a client, I want to view my tickets so that I can track their progress.
 
-As a user, I want to see my tickets so that I can track my reported problems.
+- View only my own tickets.
+- See ticket title, status, priority, and creation date.
+- Open ticket details.
 
-Acceptance criteria:
+### US-03: View Ticket Details and Reply
+As a client, I want to view ticket details and reply so that I can communicate with support staff.
 
-- The user sees only their own tickets.
-- Each ticket displays its title, status, priority, and creation date.
-- Selecting a ticket opens its details.
+- View ticket description, status, and priority.
+- Read previous replies.
+- Submit a non-empty reply.
 
-### US-03: View Ticket Details
+### US-04: Manage Assigned Tickets
+As a staff member, I want to view, search, and filter assigned tickets so that I can manage support requests.
 
-As a user, I want to view a ticket's details so that I can understand its progress.
+- View tickets assigned to me.
+- Search by ticket title.
+- Filter by ticket status.
 
-Acceptance criteria:
+### US-05: Update Tickets
+As a staff member, I want to update ticket information so that I can manage and resolve problems.
 
-- The details page shows the title and description.
-- The page displays the current status and priority.
-- The page displays replies associated with the ticket.
+- Change status to Open, In Progress, or Resolved.
+- Change priority to Low, Medium, or High.
+- Reply to clients.
 
-### US-04: Reply to a Ticket
+### US-06: View All Tickets
+As an admin, I want to view all submitted tickets so that I can monitor support requests.
 
-As a user, I want to add information to my ticket so that I can explain my problem more clearly.
+- View all tickets.
+- See ticket status, priority, and assigned staff.
+- Open ticket details.
 
-Acceptance criteria:
+### US-07: Assign Tickets
+As an admin, I want to assign tickets to staff so that support requests are handled by responsible people.
 
-- The user can submit a non-empty reply.
-- The reply appears in the ticket conversation.
-- The reply is associated with the correct ticket and user.
+- Select a staff member.
+- Assign a ticket to that staff member.
+- Display the assigned staff member in ticket details.
 
-### US-05: View All Tickets
+### US-08: Manage Users
+As an admin, I want to manage client and staff accounts so that I can control system access.
 
-As a support agent, I want to view submitted tickets so that I can manage support requests.
-
-Acceptance criteria:
-
-- The agent can access the ticket management list.
-- Each row shows the ticket title, status, priority, and assigned agent.
-- The agent can open ticket details.
-
-### US-06: Search and Filter Tickets
-
-As a support agent, I want to search and filter tickets so that I can find specific problems quickly.
-
-Acceptance criteria:
-
-- The agent can search tickets by title.
-- The agent can filter tickets by status.
-- The list updates to show matching tickets.
-
-### US-07: Update Ticket Status and Priority
-
-As a support agent, I want to change a ticket's status and priority so that I can manage its progress.
-
-Acceptance criteria:
-
-- The agent can change status to Open, In Progress, or Resolved.
-- The agent can set priority to Low, Medium, or High.
-- The updated values are displayed in the ticket list and details.
-
-### US-08: Reply to and Resolve a Ticket
-
-As a support agent, I want to reply to a user and resolve their ticket so that I can complete the support process.
-
-Acceptance criteria:
-
-- The agent can submit a non-empty reply.
-- The reply appears in the ticket conversation.
-- The agent can mark the ticket as Resolved.
+- View users and their roles.
+- Create and update client and staff accounts.
 
 ## 4. Main Entities
 
-- User: stores user identity and role.
-- Ticket: stores the support request, status, priority, creator, and assigned agent.
-- Reply: stores messages belonging to a ticket.
+- **User:** id, name, email, password, role (client, staff, admin).
+- **Ticket:** id, title, description, status, priority, clientId, assignedStaffId, createdAt.
+- **Reply:** id, ticketId, userId, message, createdAt.
 
 ## 5. Project Scope
 
-The first version focuses on ticket creation, ticket management, communication, search, and filtering. Authentication, database integration, backend validation, pagination, and automated testing will be implemented progressively during the semester.
+The first version focuses on ticket creation, ticket management, communication, search, filtering, and ticket assignment for Client, Staff, and Admin roles.
+
+Authentication, database integration, backend validation, pagination, and automated testing will be implemented progressively during the semester.
+
+## 6. Technology Stack
+
+- Frontend: Vue 3 + TypeScript
+- Backend: NestJS
+- Database: PostgreSQL
+- ORM: Prisma
+- State Management: Pinia
+- Routing: Vue Router
+- Testing: Vitest
+
+## 7. Expected Outcome
+
+A functional web application that helps clients report technical problems, allows staff to manage and resolve tickets, and enables admins to oversee users and ticket assignments.
