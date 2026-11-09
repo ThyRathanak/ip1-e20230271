@@ -1,16 +1,18 @@
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import { tickets as initialTickets } from "../data/tickets";
-import type { Ticket } from "../types";
+import { useTicketStore } from "../stores/ticket";
 import TicketList from "../components/TicketList.vue";
 import ClientSidebar from "../components/ClientSidebar.vue";
 
 const router = useRouter();
+const ticketStore = useTicketStore();
+
 const clientId = 1;
 
-const myTickets = ref<Ticket[]>(
-  initialTickets.filter(
+// Get current client's tickets from Pinia
+const myTickets = computed(() =>
+  ticketStore.tickets.filter(
     (ticket) => ticket.clientId === clientId
   )
 );
@@ -31,15 +33,21 @@ const resolvedCount = computed(
     ).length
 );
 
+// Load tickets when dashboard opens
+onMounted(() => {
+  ticketStore.fetchTickets();
+});
+
 function viewTicket(ticketId: number) {
   router.push(`/tickets/${ticketId}`);
 }
 </script>
 
+
 <template>
   <div class="dashboard-layout">
     <!-- Sidebar Navigation -->
-   <ClientSidebar activePage="dashboard" />
+    <ClientSidebar activePage="dashboard" />
 
     <!-- Main Content Wrapper -->
     <main class="main-content">
@@ -80,7 +88,7 @@ function viewTicket(ticketId: number) {
           <article class="stat-card">
             <span class="stat-label">TOTAL TICKETS</span>
             <div class="stat-row">
-              <h2>{{ myTickets.length }}</h2>
+              <h2>{{ ticketStore.loading ? "..." : myTickets.length }}</h2>
               <span class="badge success">+2 this wk</span>
             </div>
           </article>
@@ -88,7 +96,7 @@ function viewTicket(ticketId: number) {
           <article class="stat-card">
             <span class="stat-label">OPEN / IN PROGRESS</span>
             <div class="stat-row">
-              <h2 class="blue-text">{{ openCount }}</h2>
+              <h2 class="blue-text">{{ticketStore.loading ? "..." : openCount }}</h2>
               <span class="badge info">Active Queue</span>
             </div>
           </article>
@@ -96,7 +104,7 @@ function viewTicket(ticketId: number) {
           <article class="stat-card">
             <span class="stat-label">RESOLVED</span>
             <div class="stat-row">
-              <h2>{{ resolvedCount }}</h2>
+              <h2>{{ ticketStore.loading ? "..." : resolvedCount }}</h2>
               <span class="stat-sub">93.3% SLA hit</span>
             </div>
           </article>
@@ -107,7 +115,8 @@ function viewTicket(ticketId: number) {
           <span class="notice-icon">📢</span>
           <div class="notice-content">
             <div class="notice-title">Campus Network Operations Notice <span class="info-tag">INFO</span></div>
-            <p>Scheduled core switch upgrades in Science Quad tonight from 02:00 to 04:00 AM EST. Wired Dorm Ethernet unaffected.</p>
+            <p>Scheduled core switch upgrades in Science Quad tonight from 02:00 to 04:00 AM EST. Wired Dorm Ethernet
+              unaffected.</p>
           </div>
           <a href="#" class="notice-action">Incident Details →</a>
         </div>
@@ -121,12 +130,34 @@ function viewTicket(ticketId: number) {
         </div>
 
         <!-- Tickets Table Container -->
+
         <div class="table-container">
-          <TicketList
-            :tickets="myTickets"
-            @view="viewTicket"
-          />
+          <!-- Loading State -->
+          <div v-if="ticketStore.loading" class="state-message">
+            Loading tickets...
+          </div>
+
+          <!-- Error State -->
+          <div v-else-if="ticketStore.error" class="state-message error">
+            <p>{{ ticketStore.error }}</p>
+            <button class="btn-primary" @click="ticketStore.fetchTickets()">
+              Try Again
+            </button>
+          </div>
+
+          <!-- Empty State -->
+          <div v-else-if="myTickets.length === 0" class="state-message">
+            <h3>No tickets found</h3>
+            <p>You haven't created any support tickets yet.</p>
+            <button class="btn-primary" @click="router.push('/tickets/new')">
+              Create Your First Ticket
+            </button>
+          </div>
+
+          <!-- Success State -->
+          <TicketList v-else :tickets="myTickets" @view="viewTicket" />
         </div>
+
       </div>
     </main>
   </div>
@@ -205,7 +236,8 @@ function viewTicket(ticketId: number) {
   font-size: 0.9rem;
 }
 
-.nav-link.active, .nav-link:hover {
+.nav-link.active,
+.nav-link:hover {
   background-color: #e0e7ff;
   color: #4338ca;
 }
@@ -217,7 +249,7 @@ function viewTicket(ticketId: number) {
 
 /* Logout link styled red based on configuration */
 .logout-link {
-  color: #ef4444; 
+  color: #ef4444;
   text-decoration: none;
   font-weight: 600;
   font-size: 0.9rem;
@@ -344,6 +376,7 @@ function viewTicket(ticketId: number) {
   color: #64748b;
   font-weight: 600;
 }
+
 .breadcrumb span {
   color: #4f46e5;
 }
@@ -499,5 +532,18 @@ h1 {
   border-radius: 8px;
   padding: 16px;
 }
+.state-message {
+  padding: 40px 20px;
+  text-align: center;
+  color: #64748b;
+}
 
+.state-message.error {
+  color: #dc2626;
+}
+
+.state-message h3 {
+  color: #334155;
+  margin-bottom: 8px;
+}
 </style>

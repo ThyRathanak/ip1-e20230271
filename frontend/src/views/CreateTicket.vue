@@ -1,4 +1,3 @@
-```vue
 <script setup lang="ts">
 import { ref } from "vue";
 import { useRouter } from "vue-router";
@@ -16,13 +15,20 @@ const form = ref({
 const errors = ref({
   title: "",
   category: "",
+  priority: "",
   description: "",
 });
+
+// Clear the error when the user corrects a field
+function clearError(field: keyof typeof errors.value) {
+  errors.value[field] = "";
+}
 
 function submitTicket() {
   errors.value = {
     title: "",
     category: "",
+    priority: "",
     description: "",
   };
 
@@ -34,11 +40,18 @@ function submitTicket() {
     errors.value.category = "Please select a category.";
   }
 
+  if (!["low", "medium", "high", "urgent"].includes(form.value.priority)) {
+    errors.value.priority = "Please select a valid priority.";
+  }
+
   if (!form.value.description.trim()) {
     errors.value.description = "Please describe your problem.";
   }
 
-  if (Object.values(errors.value).some(Boolean)) return;
+  // Stop submission if validation fails
+  if (Object.values(errors.value).some(Boolean)) {
+    return;
+  }
 
   // TODO: Connect to backend API
   alert("Ticket submitted successfully!");
@@ -50,6 +63,7 @@ function cancel() {
   router.push("/tickets");
 }
 </script>
+
 
 <template>
   <div class="dashboard-layout">
@@ -95,19 +109,17 @@ function cancel() {
               <!-- Title -->
               <div class="form-group">
                 <label for="title">Ticket Title *</label>
-                <input
-                  id="title"
-                  v-model="form.title"
-                  type="text"
-                  placeholder="e.g. Unable to connect to campus Wi-Fi"
-                />
-                <span class="error">{{ errors.title }}</span>
+                <input id="title" v-model="form.title" type="text" placeholder="e.g. Unable to connect to campus Wi-Fi"
+                  @input="clearError('title')" />
+                <span v-if="errors.title" class="error">
+                  {{ errors.title }}
+                </span>
               </div>
 
               <!-- Category -->
               <div class="form-group">
                 <label for="category">Category *</label>
-                <select id="category" v-model="form.category">
+                <select id="category" v-model="form.category" @change="clearError('category')">
                   <option value="" disabled>Select a category</option>
                   <option value="hardware">Hardware</option>
                   <option value="software">Software</option>
@@ -121,7 +133,7 @@ function cancel() {
               <!-- Priority -->
               <div class="form-group">
                 <label for="priority">Priority *</label>
-                <select id="priority" v-model="form.priority">
+                <select id="priority" v-model="form.priority" @change="clearError('priority')">
                   <option value="low">Low</option>
                   <option value="medium">Medium</option>
                   <option value="high">High</option>
@@ -136,12 +148,11 @@ function cancel() {
               <!-- Description -->
               <div class="form-group">
                 <label for="description">Problem Description *</label>
-                <textarea
-                  id="description"
-                  v-model="form.description"
-                  rows="6"
+                <textarea id="description" v-model="form.description" rows="6"
                   placeholder="Explain your problem, when it started, and what you have tried..."
-                ></textarea>
+                  @input="clearError('description')"
+                  >
+                </textarea>
                 <span class="error">{{ errors.description }}</span>
               </div>
 
@@ -158,11 +169,7 @@ function cancel() {
 
               <!-- Actions -->
               <div class="form-actions">
-                <button
-                  type="button"
-                  class="btn-secondary"
-                  @click="cancel"
-                >
+                <button type="button" class="btn-secondary" @click="cancel">
                   Cancel
                 </button>
 

@@ -1,16 +1,9 @@
 
 <script setup lang="ts">
-import { RouterLink, RouterView } from "vue-router";
+import {RouterView } from "vue-router";
 </script>
 
 <template>
-  <!-- <header>
-    <nav>
-      <RouterLink to="/client">Client Dashboard</RouterLink>
-      <RouterLink to="/staff/tickets">Staff Queue</RouterLink>
-    </nav>
-  </header> -->
-
   <RouterView />
 </template>
 
